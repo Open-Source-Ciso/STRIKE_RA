@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Review — STRIKE RA{% endblock %}
+
+{% block content %}
+<main class="hero">
+    <a class="back-link" href="{{ url_for('home') }}">&larr; Home</a>
+
+    <h1 class="page-title">Assessment summary</h1>
+    <p class="tagline">Here's what you captured across the STRIKE steps.</p>
+
+    <ol class="flow">
+        {% for item in items %}
+        <li class="flow-item">
+            <span class="flow-letter">{{ item.letter }}</span>
+            <div class="flow-body">
+                <span class="flow-name">{{ item.name }} · {{ item.prompt }}</span>
+                <span class="flow-answer {% if not item.answer %}empty{% endif %}">
+                    {{ item.answer if item.answer else "(no answer)" }}
+                </span>
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+
+    <div class="form-actions">
+        <a class="btn btn-ghost" href="{{ url_for('assessment', step=0) }}">&larr; Edit answers</a>
+        <a class="btn btn-primary" href="{{ url_for('new_assessment') }}">Start over</a>
+    </div>
+</main>
+{% endblock %}
