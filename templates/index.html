@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}STRIKE RA — Threat-led Risk Assessment{% endblock %}
+
+{% block content %}
+<main class="hero">
+    <span class="badge">AI-powered · Evidence-driven</span>
+
+    <h1 class="brand">STRIKE<span class="brand-accent">RA</span></h1>
+    <p class="tagline">Threat-led Risk Assessment</p>
+
+    <a class="cta" href="{{ url_for('new_assessment') }}">New Assessment</a>
+
+    <ul class="strike-steps" aria-label="The STRIKE methodology">
+        {% for step in steps %}
+        <li class="step">
+            <span class="step-letter">{{ step.letter }}</span>
+            <span class="step-name">{{ step.name }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}
