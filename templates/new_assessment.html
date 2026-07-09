@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}New Assessment — STRIKE RA{% endblock %}
+
+{% block content %}
+<main class="hero">
+    <a class="back-link" href="{{ url_for('home') }}">&larr; Back</a>
+
+    <h1 class="page-title">New Assessment</h1>
+    <p class="tagline">We'll walk through the STRIKE methodology, one step at a time.</p>
+
+    <ol class="flow">
+        {% for step in steps %}
+        <li class="flow-item">
+            <span class="flow-letter">{{ step.letter }}</span>
+            <div class="flow-body">
+                <span class="flow-name">{{ step.name }}</span>
+                <span class="flow-prompt">{{ step.prompt }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+
+    <p class="coming-soon">The guided conversation is coming next sprint.</p>
+</main>
+{% endblock %}
