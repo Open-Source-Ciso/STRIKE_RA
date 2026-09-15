@@ -1,15 +1,24 @@
 {% extends "base.html" %}
 
 {% block title %}STRIKE RA — Threat-led Risk Assessment{% endblock %}
+{% block body_class %}home{% endblock %}
 
 {% block content %}
 <main class="hero">
-    <span class="badge">AI-powered · Evidence-driven</span>
+    <span class="badge">STRIKE Threat · Advanced modelling &amp; intelligence</span>
 
     <h1 class="brand">STRIKE<span class="brand-accent">RA</span></h1>
-    <p class="tagline">Threat-led Risk Assessment</p>
+    <p class="tagline">Threat-led risk assessment in minutes — aligned to the methodologies you already use.</p>
+    <p class="lede">
+        STRIKE is the native spine. STRIKE Threat takes a STRIDE model, ATT&amp;CK techniques,
+        PASTA notes, LINDDUN findings, or a Centurion / EBIOS RM study as input and produces
+        defensible crown jewels, paths, ranked risk, and a GRC-ready export.
+    </p>
 
-    <a class="cta" href="{{ url_for('new_assessment') }}">New Assessment</a>
+    <div class="form-actions">
+        <a class="cta" href="{{ url_for('new_assessment') }}">New Assessment</a>
+        <a class="btn btn-ghost" href="{{ url_for('new_assessment', sample=1) }}">Load sample</a>
+    </div>
 
     <ul class="strike-steps" aria-label="The STRIKE methodology">
         {% for step in steps %}
@@ -17,6 +26,12 @@
             <span class="step-letter">{{ step.letter }}</span>
             <span class="step-name">{{ step.name }}</span>
         </li>
+        {% endfor %}
+    </ul>
+
+    <ul class="method-pills" aria-label="Aligned methodologies">
+        {% for method in methods if not method.always_on %}
+        <li>{{ method.name }}</li>
         {% endfor %}
     </ul>
 </main>

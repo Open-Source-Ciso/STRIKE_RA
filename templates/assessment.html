@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ step.name }} — STRIKE RA{% endblock %}
+{% block body_class %}app{% endblock %}
+
+{% block content %}
+<main class="app-page">
+    <p class="eyebrow">{{ title }}</p>
+
+    <div class="progress" aria-label="Progress">
+        {% for s in steps %}
+        <span class="pip {% if loop.index0 < index %}done{% elif loop.index0 == index %}current{% endif %}">{{ s.letter }}</span>
+        {% endfor %}
+    </div>
+
+    <p class="step-count">Step {{ index + 1 }} of {{ total }} · {{ step.name }}</p>
+    <h1 class="page-title">{{ step.prompt }}</h1>
+    <p class="lede">{{ step.help }}</p>
+
+    {% if hints %}
+    <aside class="hint-panel" aria-label="Methodology prompts">
+        {% for hint in hints %}
+        <p><strong>{{ hint.name }}.</strong> {{ hint.text }}</p>
+        {% endfor %}
+    </aside>
+    {% endif %}
+
+    <form class="assessment-form" method="post" action="{{ url_for('assessment', step=index) }}">
+        <textarea name="answer" rows="7" placeholder="{{ step.placeholder }}" autofocus>{{ answer }}</textarea>
+        <div class="form-actions">
+            {% if index > 0 %}
+            <button class="btn btn-ghost" type="submit" name="action" value="back">&larr; Back</button>
+            {% endif %}
+            <button class="btn btn-primary" type="submit" name="action" value="next">
+                {% if is_last %}Generate report →{% else %}Next →{% endif %}
+            </button>
+        </div>
+    </form>
+</main>
+{% endblock %}

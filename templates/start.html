@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}New Assessment — STRIKE RA{% endblock %}
+{% block body_class %}app{% endblock %}
+
+{% block content %}
+<main class="app-page">
+    <p class="eyebrow">New assessment</p>
+    <h1 class="page-title">Align, then walk STRIKE</h1>
+    <p class="lede">
+        STRIKE stays the conversation. Choose the languages this assessment must speak,
+        and optionally paste an existing model so Threat, Route, and Centurion start from known work.
+    </p>
+
+    <form class="stack-form" method="post" action="{{ url_for('new_assessment') }}">
+        <label class="field">
+            <span>Assessment name</span>
+            <input type="text" name="title" placeholder="e.g. Customer payments portal" autofocus />
+        </label>
+
+        <fieldset class="field">
+            <legend>Align with</legend>
+            <p class="field-help">STRIKE is always on. Select any others this report must map to.</p>
+            <div class="chip-grid">
+                <label class="chip chip-locked">
+                    <input type="checkbox" checked disabled />
+                    <span>
+                        <strong>STRIKE</strong>
+                        <em>Native spine</em>
+                    </span>
+                </label>
+                {% for method in methods %}
+                <label class="chip">
+                    <input type="checkbox" name="methodologies" value="{{ method.id }}" />
+                    <span>
+                        <strong>{{ method.name }}</strong>
+                        <em>{{ method.short }}</em>
+                    </span>
+                </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <label class="field">
+            <span>Existing model input</span>
+            <select name="import_kind">
+                {% for value, label in import_kinds %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label class="field">
+            <span>Paste STRIDE / ATT&amp;CK / Centurion / notes (optional)</span>
+            <textarea name="import_text" rows="10" placeholder="JSON, labelled lines (Assets: … / ATT&amp;CK: T1566, T1078), or free prose from another workshop."></textarea>
+        </label>
+
+        <div class="form-actions">
+            <a class="btn btn-ghost" href="{{ url_for('new_assessment', sample=1) }}">Load sample</a>
+            <button class="btn btn-primary" type="submit">Start STRIKE →</button>
+        </div>
+    </form>
+</main>
+{% endblock %}
