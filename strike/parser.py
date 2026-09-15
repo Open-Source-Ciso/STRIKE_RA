@@ -54,8 +54,8 @@ def split_items(text: str) -> list[str]:
         line = re.sub(r"^\d+[.)]\s+", "", line)
         if not line:
             continue
-        if "," in line and len(line) < 180 and "://" not in line:
-            for part in line.split(","):
+        if ("," in line or ";" in line) and len(line) < 220 and "://" not in line:
+            for part in re.split(r"[,;]", line):
                 item = part.strip(" .;")
                 if item:
                     pieces.append(item)

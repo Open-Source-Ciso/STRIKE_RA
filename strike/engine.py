@@ -192,9 +192,11 @@ def _extract_crown_jewels(scope: str, imported: ImportedModel) -> list[CrownJewe
     names: list[tuple[str, str]] = []
     for item in imported.assets:
         names.append((item, "import"))
-    # Prefer labelled or hinted phrases from scope.
+    # Prefer short, named assets from scope — never a whole paragraph.
     scope_items = split_items(scope)
     for item in scope_items:
+        if len(item) > 90 or len(item.split()) > 8:
+            continue
         lowered = item.lower()
         if any(hint in lowered for hint in ASSET_HINTS) or len(item.split()) <= 6:
             names.append((item, "scope"))
@@ -291,12 +293,15 @@ def _threats(
     stride_hits: list[str],
     techniques: list[str],
 ) -> list[ThreatItem]:
-    names = split_items(threat_text) + list(imported.threats)
-    # Keep actor-like items; drop very generic fragments.
+    names = list(imported.threats) + split_items(threat_text)
+    # Keep actor-like items; drop paragraphs and very generic fragments.
     actors: list[str] = []
+    seen_actors: set[str] = set()
     for name in names:
-        if len(name) < 4:
+        key = name.lower()
+        if len(name) < 4 or len(name.split()) > 10 or key in seen_actors:
             continue
+        seen_actors.add(key)
         actors.append(name)
         if len(actors) == 5:
             break
