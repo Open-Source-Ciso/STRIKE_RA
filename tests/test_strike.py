@@ -65,11 +65,16 @@ class EngineTests(unittest.TestCase):
         self.assertIn("Centurion", result.methodology_names)
         self.assertTrue(any(t.attack_techniques for t in result.threats))
         self.assertTrue(any(r.dread for r in result.ranked_risks))
+        jewel_names = [j.name.lower() for j in result.crown_jewels]
+        self.assertTrue(any("cardholder" in n for n in jewel_names))
+        self.assertFalse(any(n.startswith("saas payments") for n in jewel_names))
+        threat_names = [t.name.lower() for t in result.threats]
+        self.assertIn("external cybercriminals", threat_names)
+        self.assertFalse(any("after card" in n for n in threat_names))
         for jewel in result.crown_jewels:
             self.assertLessEqual(len(jewel.name.split()), 12)
         for threat in result.threats:
             self.assertLessEqual(len(threat.name.split()), 12)
-            self.assertFalse(threat.name.lower().startswith("saas payments"))
 
     def test_sparse_input_still_produces_baseline(self):
         result = generate_assessment(title="", answers=["", "", "", "", "", ""])

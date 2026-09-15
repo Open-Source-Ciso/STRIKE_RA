@@ -193,13 +193,13 @@ def _extract_crown_jewels(scope: str, imported: ImportedModel) -> list[CrownJewe
     for item in imported.assets:
         names.append((item, "import"))
     # Prefer short, named assets from scope — never a whole paragraph.
-    scope_items = split_items(scope)
-    for item in scope_items:
-        if len(item) > 90 or len(item.split()) > 8:
-            continue
-        lowered = item.lower()
-        if any(hint in lowered for hint in ASSET_HINTS) or len(item.split()) <= 6:
-            names.append((item, "scope"))
+    if len(names) < 5:
+        for item in split_items(scope):
+            if len(item) > 72 or len(item.split()) > 6:
+                continue
+            lowered = item.lower()
+            if any(hint in lowered for hint in ASSET_HINTS) or len(item.split()) <= 5:
+                names.append((item, "scope"))
     # Fallback sentences.
     if len(names) < 3:
         for sentence in re_split_sentences(scope):
@@ -293,13 +293,16 @@ def _threats(
     stride_hits: list[str],
     techniques: list[str],
 ) -> list[ThreatItem]:
-    names = list(imported.threats) + split_items(threat_text)
+    imported_names = list(imported.threats)
+    names = imported_names + split_items(threat_text)
+    imported_set = {t.lower() for t in imported_names}
     # Keep actor-like items; drop paragraphs and very generic fragments.
     actors: list[str] = []
     seen_actors: set[str] = set()
     for name in names:
         key = name.lower()
-        if len(name) < 4 or len(name.split()) > 10 or key in seen_actors:
+        word_limit = 10 if key in imported_set else 6
+        if len(name) < 4 or len(name.split()) > word_limit or key in seen_actors:
             continue
         seen_actors.add(key)
         actors.append(name)
