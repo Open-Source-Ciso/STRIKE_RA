@@ -9,9 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <div class="grid-overlay" aria-hidden="true"></div>
     <div class="glow" aria-hidden="true"></div>
+    <header class="topbar">
+        <a class="topbar-brand" href="{{ url_for('home') }}">STRIKE<span>RA</span></a>
+        <nav class="topbar-nav">
+            <a href="{{ url_for('methodologies') }}">Methodologies</a>
+            <a class="topbar-cta" href="{{ url_for('new_assessment') }}">New assessment</a>
+        </nav>
+    </header>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flash" role="status">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
 </body>
 </html>

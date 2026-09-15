@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Methodologies — STRIKE Threat{% endblock %}
+{% block body_class %}app{% endblock %}
+
+{% block content %}
+<main class="app-page">
+    <p class="eyebrow">STRIKE Threat</p>
+    <h1 class="page-title">Advanced threat modelling &amp; intelligence</h1>
+    <p class="lede">
+        STRIKE is the conversation. Everything else is a lens: how we intake existing work,
+        which labels we attach, and how we hand the result to Centurion.
+    </p>
+
+    <section class="report-section">
+        <h2>Methodologies</h2>
+        <ul class="card-list">
+            {% for method in methods %}
+            <li class="card">
+                <span class="ref">{{ method.short }}</span>
+                <strong>{{ method.name }}</strong>
+                <p>{{ method.description }}</p>
+                <p class="meta">Intake: {{ method.intake }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="report-section">
+        <h2>Crosswalk</h2>
+        <div class="table-wrap">
+            <table class="grid-table">
+                <thead>
+                    <tr>
+                        <th>STRIKE</th>
+                        <th>STRIDE</th>
+                        <th>PASTA</th>
+                        <th>LINDDUN</th>
+                        <th>ATT&amp;CK</th>
+                        <th>Centurion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in crosswalk %}
+                    <tr>
+                        <td>{{ row.strike }}</td>
+                        <td>{{ row.stride }}</td>
+                        <td>{{ row.pasta }}</td>
+                        <td>{{ row.linddun }}</td>
+                        <td>{{ row.attack }}</td>
+                        <td>{{ row.centurion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}

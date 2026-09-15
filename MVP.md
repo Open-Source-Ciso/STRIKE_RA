@@ -1,7 +1,7 @@
 # STRIKE RA MVP
 
 ## Goal
-Replace a laborious spreadsheet-driven security risk assessment with a fast, guided, threat-led assessment.
+Replace a laborious spreadsheet-driven security risk assessment with a fast, guided, threat-led assessment that also accepts and aligns commonly used threat-modelling methodologies.
 
 ## MVP Outcome
 In under 20 minutes, STRIKE RA should produce:
@@ -12,28 +12,31 @@ In under 20 minutes, STRIKE RA should produce:
 - Ranked Risk View
 - Resilience Priorities
 - Action Plan
+- Methodology alignment (STRIDE, PASTA, LINDDUN, ATT&CK, Centurion/EBIOS)
+- Centurion JSON export (`centurion.ebios.v1`)
 
 ## MVP Workflow
-1. Start new assessment
+1. Start new assessment (choose lenses, optional model paste)
 2. Answer guided STRIKE questions
 3. Review generated outputs
-4. Export report
+4. Export Markdown / Centurion JSON
 
 ## In Scope
 - Single user
 - Local/browser prototype
 - Guided assessment flow
-- AI-assisted output generation
+- Methodology intake and crosswalk
+- Deterministic output generation
 - Report preview
-- Markdown/PDF export
+- Markdown/JSON export
 
 ## Out of Scope
 - Login
 - Multi-user collaboration
 - RBAC
 - Enterprise dashboards
-- Framework mapping
 - Knowledge graph
 - Evidence store
+- Live CISO Assistant API write
 - Azure deployment
 - Full STRIKE OS platform

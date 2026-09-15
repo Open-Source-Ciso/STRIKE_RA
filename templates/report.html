@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Report — {{ result.title }}{% endblock %}
+{% block body_class %}app{% endblock %}
+
+{% block content %}
+<main class="app-page report">
+    <p class="eyebrow">STRIKE Threat report</p>
+    <h1 class="page-title">{{ result.title }}</h1>
+    <p class="lede">
+        Aligned with {{ result.methodology_names | join(", ") }}.
+        Generated from the STRIKE conversation
+        {%- if result.imported.had_json or result.imported.assets or result.imported.techniques %}
+        plus imported model evidence
+        {%- endif %}.
+    </p>
+
+    <div class="form-actions">
+        <a class="btn btn-ghost" href="{{ url_for('assessment', step=0) }}">Edit answers</a>
+        <a class="btn btn-ghost" href="{{ url_for('export_markdown') }}">Download Markdown</a>
+        <a class="btn btn-primary" href="{{ url_for('export_centurion_json') }}">Centurion JSON</a>
+    </div>
+
+    <section class="report-section">
+        <h2>Crown jewels</h2>
+        <ul class="card-list">
+            {% for jewel in result.crown_jewels %}
+            <li class="card">
+                <span class="ref">{{ jewel.id }}</span>
+                <strong>{{ jewel.name }}</strong>
+                <p>{{ jewel.rationale }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="report-section">
+        <h2>Top threats</h2>
+        <ul class="card-list">
+            {% for threat in result.threats %}
+            <li class="card">
+                <span class="ref">{{ threat.id }} · {{ threat.severity }}</span>
+                <strong>{{ threat.name }}</strong>
+                <p>{{ threat.description }}</p>
+                <p class="meta">
+                    STRIDE {{ threat.stride | join(" ") or "—" }}
+                    · origin {{ threat.risk_origin }}
+                    {% if threat.attack_techniques %}· {{ threat.attack_techniques | join(", ") }}{% endif %}
+                    {% if threat.linddun %}· LINDDUN {{ threat.linddun | join(", ") }}{% endif %}
+                </p>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="report-section">
+        <h2>Attack paths</h2>
+        <ul class="card-list">
+            {% for path in result.attack_paths %}
+            <li class="card">
+                <span class="ref">{{ path.id }} · {{ path.likelihood }} likelihood</span>
+                <strong>{{ path.name }}</strong>
+                <ol class="path-steps">
+                    {% for step in path.steps %}
+                    <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+                {% if path.techniques %}
+                <p class="meta">{{ path.techniques | join(", ") }}</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="report-section">
+        <h2>Ranked risk</h2>
+        <table class="grid-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Scenario</th>
+                    <th>Impact</th>
+                    <th>Likelihood</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for risk in result.ranked_risks %}
+                <tr>
+                    <td>{{ risk.id }}</td>
+                    <td>{{ risk.title }}{% if risk.dread %}<br /><span class="meta">DREAD {{ risk.dread.total }}</span>{% endif %}</td>
+                    <td>{{ risk.impact }}</td>
+                    <td>{{ risk.likelihood }}</td>
+                    <td>{{ risk.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="report-section">
+        <h2>Resilience priorities</h2>
+        <ul class="card-list">
+            {% for item in result.resilience %}
+            <li class="card">
+                <span class="ref">{{ item.csf_function }}</span>
+                <strong>{{ item.title }}</strong>
+                <p>{{ item.action }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="report-section">
+        <h2>Action plan</h2>
+        <ol class="flow">
+            {% for item in result.action_plan %}
+            <li class="flow-item">
+                <span class="flow-letter">{{ loop.index }}</span>
+                <div class="flow-body">
+                    <span class="flow-name">{{ item.title }}</span>
+                    <span class="flow-prompt">{{ item.owner_hint }} · {{ item.related_risk_ids | join(", ") }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+
+    <section class="report-section">
+        <h2>Methodology alignment</h2>
+        <table class="grid-table">
+            <thead>
+                <tr>
+                    <th>STRIKE</th>
+                    <th>Artefact</th>
+                    <th>Aligns with</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in result.alignment %}
+                <tr>
+                    <td>{{ row.letter }} {{ row.step }}</td>
+                    <td>{{ row.artefact }}</td>
+                    <td>{{ row.aligned_with }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="report-section">
+        <h2>Centurion interchange</h2>
+        <p class="lede">
+            <code>centurion.ebios.v1</code> — assets, feared events, RO/TO couples,
+            strategic and operational scenarios, attack paths, and risk scenarios
+            shaped for CISO Assistant’s EBIOS RM study.
+        </p>
+        <pre class="json-preview" tabindex="0">{{ centurion_json }}</pre>
+    </section>
+</main>
+{% endblock %}

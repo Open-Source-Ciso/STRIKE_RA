@@ -1,0 +1,18 @@
+{
+  "assets": [
+    "Cardholder data (tokenised PAN)",
+    "Merchant API keys",
+    "Payout rails"
+  ],
+  "threats": [
+    "External cybercriminals",
+    "Malicious insider"
+  ],
+  "stride": ["S", "T", "I", "E"],
+  "techniques": ["T1566", "T1078", "T1190"],
+  "feared_events": ["PCI data breach", "Unauthorised payouts"],
+  "risk_origins": ["cybercriminal", "insider"],
+  "attack_paths": [
+    ["Phish a merchant admin", "Reuse valid portal credentials", "Abuse payout API"]
+  ]
+}
