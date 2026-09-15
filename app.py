@@ -15,6 +15,7 @@ from flask import (
     session,
     url_for,
 )
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from strike.catalog import (
     STRIKE_STEPS,
@@ -29,6 +30,11 @@ from strike.report import render_markdown
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "strike-ra-dev-secret")
+# Trust X-Forwarded-* from Render / Fly / Cloudflare so HTTPS sessions work.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+if os.environ.get("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}:
+    app.config["SESSION_COOKIE_SECURE"] = True
 
 SAMPLE = {
     "title": "Customer payments portal",
@@ -134,6 +140,11 @@ def inject_brand():
         "strike_steps": STRIKE_STEPS,
         "optional_methods": methodology_list(include_native=False),
     }
+
+
+@app.route("/health")
+def health():
+    return {"status": "ok", "service": "strike-ra"}
 
 
 @app.route("/")
@@ -269,4 +280,6 @@ def export_centurion_json():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", "5000"))
+    debug = os.environ.get("FLASK_DEBUG", "1") == "1"
+    app.run(host="0.0.0.0", port=port, debug=debug)

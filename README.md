@@ -36,3 +36,28 @@ Then open http://localhost:5000 in your browser. `New Assessment` starts the gui
 ```bash
 python -m pytest tests/test_strike.py -q
 ```
+
+## Host it (demo URL)
+
+Nothing is deployed yet — this is a local Flask app. It is ready to put on any Python/container host.
+
+**Production server (same machine):**
+
+```bash
+pip install -r requirements.txt
+export SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_hex(32))')"
+export PORT=5000
+gunicorn -b 0.0.0.0:$PORT --workers 2 --threads 4 app:app
+```
+
+**Docker:**
+
+```bash
+docker build -t strike-ra .
+docker run --rm -p 8080:8080 -e SECRET_KEY=change-me strike-ra
+```
+
+**Render / Railway / Fly:** connect this GitHub repo, use the `Dockerfile` or `Procfile`. Set `SECRET_KEY` (and `SESSION_COOKIE_SECURE=true` behind HTTPS). Render can also apply `render.yaml`. Health check: `GET /health`.
+
+The GitHub repo is **private**, so GitHub Pages will not serve this (and Pages cannot run Flask anyway). The host needs a Python process, not a static site.
+
